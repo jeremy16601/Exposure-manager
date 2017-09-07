@@ -2,7 +2,7 @@
     <div>
         <head-top></head-top>
 		<section class="data_section">
-			<header class="section_title">数据统计</header>
+			<header class="section_title">曝光吧数据统计</header>
 			<el-row :gutter="20" style="margin-bottom: 10px;">
                 <el-col :span="5"><div class="data_list today_head"><span class="data_num head">当日数据：</span></div></el-col>
 				<el-col :span="5"><div class="data_list"><span class="data_num">{{apiCount}}</span> API请求量</div></el-col>

@@ -8,12 +8,12 @@
  */
 let baseUrl = ''; 
 let routerMode = 'history';
-let baseImgPath = 'http://images.cangdu.org/';
+let baseImgPath = 'http://res.bbaaoo.cn/';
 
 if (process.env.NODE_ENV == 'development') {
-	//baseUrl = 'http://cangdu.org:8001';
+	baseUrl = 'http://localhost:7001';
 }else{
-	baseUrl = 'http://cangdu.org:8001';
+	baseUrl = 'http://api.bbaaoo.cn';
 }
 
 export {
