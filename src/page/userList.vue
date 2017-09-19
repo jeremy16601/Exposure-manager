@@ -17,7 +17,7 @@
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="10" layout="total, prev, pager, next" :total="count">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
         </div>
@@ -33,7 +33,7 @@ export default {
             users: [],
             currentRow: null,
             offset: 0,
-            limit: 20,
+            limit: 15,
             count: 0,
             currentPage: 1,
         }

@@ -139,7 +139,7 @@ export const getACount = () => http.get(host + '/article?type=count');
 /**
  * 文章列表
  */
-export const getArticles = () => http.get(host + '/article?type=1');
+export const getArticles = (offset,limit) => http.get(host + '/article?type=1&offset='+offset+'&limit='+limit);
 /**
  * 查询分类
  */

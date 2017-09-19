@@ -47,7 +47,7 @@ export default {
             baseImgPath,
             city: {},
             offset: 0,
-            limit: 20,
+            limit: 10,
             count: 0,
             tableData: [],
             currentPage: 1,
@@ -107,9 +107,9 @@ export default {
         },
         async getArticles() {
             const { latitude, longitude } = this.city;
-              console.log('文章列表：offset='+this.offset+'limit:'+this.limit)
-            this.tableData = await getArticles({ latitude, longitude, offset: this.offset, limit: this.limit });
-          
+            console.log('文章列表：offset=' + this.offset + 'limit:' + this.limit)
+            this.tableData = await getArticles(this.offset, this.limit);
+
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
