@@ -33,7 +33,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['API请求量', '新注册用户', '新增订单', '新增管理员']
+                        data:['API请求量', '新注册用户', '新增文章', '新增管理员']
                     },
                     toolbox: {
                         show: true,
@@ -69,7 +69,7 @@
                         },
                         {
                           type: 'value',
-                          name: '用户、订单',
+                          name: '用户、文章',
                           min: 0,
                           max: 400,
                           position: 'right',
@@ -108,7 +108,7 @@
                             },
                         },
                         {
-                            name:'新增订单',
+                            name:'新增文章',
                             type:'line',
                             data:this.sevenDate[2],
                             yAxisIndex: 1,

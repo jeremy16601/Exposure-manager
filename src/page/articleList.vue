@@ -10,7 +10,7 @@
                 </el-table-column>
                 <el-table-column label="标题" prop="title" width="400">
                 </el-table-column>
-                <el-table-column label="状态" prop="status" width="50">
+                <el-table-column label="状态" prop="status">
                 </el-table-column>
                 <el-table-column label="查看" prop="view_times">
                 </el-table-column>
@@ -22,7 +22,7 @@
                 <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="mini" type="Success" @click="addFood(scope.$index, scope.row)">添加</el-button>
+                        <el-button size="mini" type="Success" @click="addArticle(scope.$index, scope.row)">添加</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -69,8 +69,8 @@ export default {
             try {
                 // this.city = await cityGuess();
                 const countData = await getACount();
-                if (countData.data.status == 1) {
-                    this.count = countData.data.count;
+                if (countData.status == 1) {
+                    this.count = countData.count;
                 } else {
                     throw new Error('获取数据失败');
                 }
@@ -128,7 +128,7 @@ export default {
                 this.getCategory();
             }
         },
-        addFood(index, row) {
+        addArticle(index, row) {
             this.$router.push({ path: 'addGoods', query: { restaurant_id: row.id } })
         },
         async handleDelete(index, row) {

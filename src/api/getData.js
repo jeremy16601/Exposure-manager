@@ -44,32 +44,32 @@ export const apiAllRecord = () => http.get('/statis/api/all');
  * 用户注册量
  */
 
-export const userCount = date => http.get('/statis/user/' + date + '/count');
+export const userCount = date => http.get(host + '/user?type=reg&dt='+date);
 
 /**
- * 某一天订单数量
+ * 某一天文章数量
  */
 
-export const orderCount = date => http.get('/statis/order/' + date + '/count');
+export const articleCount = date => http.get(host+'/article?type=reg&dt=' + date );
 
 
 /**
  * 某一天管理员注册量
  */
 
-export const adminDayCount = date => http.get('/statis/admin/' + date + '/count');
+export const adminDayCount = date => http.get(host + '/role?type=2&dt='+date);
 
 /**
  * 管理员列表
  */
 
-export const adminList = data => http.get('/admin/all', data);
+export const adminList = data => http.get(host + '/role?type=3');
 
 /**
  * 管理员数量
  */
 
-export const adminCount = () => http.get('/admin/count');
+export const adminCount = () => http.get(host + '/role?type=1');
 
 /**
  * 获取定位城市
@@ -149,4 +149,5 @@ export const addFood = () => http.get(host + '/catalog?type=1');
 export const addCategory = () => http.get(host + '/catalog?type=1');
 export const getCategory = () => http.get(host + '/catalog?type=1');
 export const foodCategory = () => http.get(host + '/catalog?type=1');
-export const getOrderCount = () => http.get(host + '/catalog?type=1');
+//查询新增文章总数
+export const getAritleCount = () => http.get(host + '/article?type=count');

@@ -62,7 +62,7 @@ export default {
 			this.$refs[formName].validate(async (valid) => {
 				if (valid) {
 					const res = await login({ account: this.loginForm.account, password: this.loginForm.password })
-					if (res.data.length>0) {
+					if (res.length>0) {
 						this.$message({
 							type: 'success',
 							message: '登录成功'

@@ -7,7 +7,7 @@
                 <el-col :span="5"><div class="data_list today_head"><span class="data_num head">当日数据：</span></div></el-col>
 				<el-col :span="5"><div class="data_list"><span class="data_num">{{apiCount}}</span> API请求量</div></el-col>
 				<el-col :span="4"><div class="data_list"><span class="data_num">{{userCount}}</span> 新增用户</div></el-col>
-				<el-col :span="4"><div class="data_list"><span class="data_num">{{orderCount}}</span> 新增订单</div></el-col>
+				<el-col :span="4"><div class="data_list"><span class="data_num">{{articleCount}}</span> 新增文章</div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{adminCount}}</span> 新增管理员</div></el-col>
 			</el-row>
             <el-row :gutter="20">
@@ -19,7 +19,7 @@
                     </div>
                 </el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allUserCount}}</span> 注册用户</div></el-col>
-                <el-col :span="4"><div class="data_list"><span class="data_num">{{allOrderCount}}</span> 订单</div></el-col>
+                <el-col :span="4"><div class="data_list"><span class="data_num">{{allarticleCount}}</span> 文章</div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allAdminCount}}</span> 管理员</div></el-col>
             </el-row>
 		</section>
@@ -31,17 +31,17 @@
 	import headTop from '../components/headTop'
 	import tendency from '../components/tendency' 
 	import dtime from 'time-formater'
-	import {apiCount, userCount, orderCount, apiAllCount, getUserCount, getOrderCount, adminDayCount, adminCount} from '@/api/getData'
+	import {apiCount, userCount, articleCount, apiAllCount, getUserCount, getAritleCount, adminDayCount, adminCount} from '@/api/getData'
     export default {
     	data(){
     		return {
     			apiCount: null,
     			userCount: null,
-    			orderCount: null,
+    			articleCount: null,
                 adminCount: null,
                 allApiCount: null,
                 allUserCount: null,
-                allOrderCount: null,
+                allarticleCount: null,
                 allAdminCount: null,
     			sevenDay: [],
     			sevenDate: [[],[],[],[]],
@@ -66,17 +66,18 @@
         },
     	methods: {
     		async initData(){
-    			const today = dtime().format('YYYY-MM-DD')
-    			Promise.all([apiCount(today), userCount(today), orderCount(today), adminDayCount(today), apiAllCount(), getUserCount(), getOrderCount(), adminCount()])
+				const today = dtime().format('YYYY-MM-DD')
+    			Promise.all([ userCount(today), articleCount(today), adminDayCount(today),  getUserCount(), getAritleCount(), adminCount()])
     			.then(res => {
-    				this.apiCount = res[0].count;
-    				this.userCount = res[1].count;
-    				this.orderCount = res[2].count;
-                    this.adminCount = res[3].count;
-                    this.allApiCount = res[4].count;
-                    this.allUserCount = res[5].count;
-                    this.allOrderCount = res[6].count;
-                    this.allAdminCount = res[7].count;
+					console.log('获取数据：'+JSON.stringify(res))
+    				// this.apiCount = res[0].count;
+    				this.userCount = res[0].count;
+    				this.articleCount = res[1].count;
+                    this.adminCount = res[2].count;
+                 //  apiAllCount(), this.allApiCount = res[4].count;
+                    this.allUserCount = res[3].count;
+                    this.allarticleCount = res[4].count;
+                    this.allAdminCount = res[5].count;
     			}).catch(err => {
     				console.log(err)
     			})
@@ -86,7 +87,7 @@
     			this.sevenDay.forEach(item => {
     				apiArr[0].push(apiCount(item))
     				apiArr[1].push(userCount(item))
-    				apiArr[2].push(orderCount(item))
+    				apiArr[2].push(articleCount(item))
                     apiArr[3].push(adminDayCount(item))
     			})
     			const promiseArr = [...apiArr[0], ...apiArr[1], ...apiArr[2], ...apiArr[3]]
