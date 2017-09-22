@@ -1,91 +1,59 @@
 <template>
 	<div>
 		<head-top></head-top>
-		<el-row style="margin-top: 20px;">
+		<el-row>
 			<el-col :span="14" :offset="4">
-				<header class="form_header">选择分类</header>
-				<el-form :model="categoryList" ref="categoryList" label-width="110px" class="form">
-					<el-row class="category_select">
-						<el-form-item label="分类">
-							<el-select v-model="categoryList.categorySelect" :placeholder="selectValue.label" style="width:100%;">
-								<el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id">
-								</el-option>
-							</el-select>
-						</el-form-item>
-					</el-row>
-				</el-form>
-				<header class="form_header">添加食品</header>
-				<el-form :model="foodForm" :rules="foodrules" ref="foodForm" label-width="110px" class="form food_form">
-					<el-form-item label="食品名称" prop="name">
-						<el-input v-model="foodForm.name"></el-input>
-					</el-form-item>
-					<el-form-item label="食品活动" prop="activity">
-						<el-input v-model="foodForm.activity"></el-input>
-					</el-form-item>
-					<el-form-item label="食品详情" prop="description">
-						<el-input v-model="foodForm.description"></el-input>
-					</el-form-item>
-					<el-form-item label="上传食品图片">
-						<el-upload class="avatar-uploader" :action="baseUrl + '/v1/addimg/food'" :show-file-list="false" :on-success="uploadImg" :before-upload="beforeImgUpload">
-							<img v-if="foodForm.image_path" :src="baseImgPath + foodForm.image_path" class="avatar">
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
-					</el-form-item>
-					<el-form-item label="食品特点">
-						<el-select v-model="foodForm.attributes" multiple placeholder="请选择">
-							<el-option v-for="item in attributes" :key="item.value" :label="item.label" :value="item.value">
+				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form">
+					<el-form-item label="分类">
+						<el-select v-model="categorySelect" placeholder="请选择分类" style="width:100%;">
+							<el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="食品规格">
-						<el-radio class="radio" v-model="foodSpecs" label="one">单规格</el-radio>
-						<el-radio class="radio" v-model="foodSpecs" label="more">多规格</el-radio>
+
+					<el-form-item label="标题" prop="title">
+						<el-input v-model="articleForm.title"></el-input>
 					</el-form-item>
-					<el-row v-if="foodSpecs == 'one'">
-						<el-form-item label="包装费">
-							<el-input-number v-model="foodForm.specs[0].packing_fee" :min="0" :max="100"></el-input-number>
-						</el-form-item>
-						<el-form-item label="价格">
-							<el-input-number v-model="foodForm.specs[0].price" :min="0" :max="10000"></el-input-number>
-						</el-form-item>
-					</el-row>
-					<el-row v-else style="overflow: auto; text-align: center;">
-						<el-button type="primary" @click="dialogFormVisible = true" style="margin-bottom: 10px;">添加规格</el-button>
-						<el-table :data="foodForm.specs" style="margin-bottom: 20px;" :row-class-name="tableRowClassName">
-							<el-table-column prop="specs" label="规格">
-							</el-table-column>
-							<el-table-column prop="packing_fee" label="包装费">
-							</el-table-column>
-							<el-table-column prop="price" label="价格">
-							</el-table-column>
-							<el-table-column label="操作">
-								<template scope="scope">
-									<el-button size="small" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
-								</template>
-							</el-table-column>
-						</el-table>
-					</el-row>
+					<el-form-item label="发布者" prop="author">
+						<el-input v-model="articleForm.author"></el-input>
+					</el-form-item>
+					<el-form-item label="uid" prop="uid">
+						<el-input v-model="articleForm.uid"></el-input>
+					</el-form-item>
+					<el-form-item label="是否置顶" prop="isTop">
+						<el-tooltip :content="'Switch value: ' + articleForm.isTop" placement="top">
+							<el-switch v-model="articleForm.isTop" on-color="#13ce66" off-color="#ff4949" on-value="1" off-value="0">
+							</el-switch>
+						</el-tooltip>
+					</el-form-item>
+					<el-form-item label="类型" prop="resource">
+						<el-radio-group v-model="articleForm.type">
+							<el-radio label="1">热门推荐</el-radio>
+							<el-radio label="2">首页推荐</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="点赞数量" prop="zan">
+						<el-input v-model="articleForm.zan"></el-input>
+					</el-form-item>
+					<el-form-item label="位置" prop="location">
+						<el-input v-model="articleForm.location"></el-input>
+					</el-form-item>
+					</el-form-item>
+					<el-form-item label="头像" prop="authorImg">
+						<el-input v-model="articleForm.authorImg"></el-input>
+					</el-form-item>
+					<el-form-item label="详情" prop="content">
+						<div class="edit_container">
+							<quill-editor v-model="articleForm.content" ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)">
+							</quill-editor>
+						</div>
+					</el-form-item>
+
 					<el-form-item>
-						<el-button type="primary" @click="addFood('foodForm')">确认添加食品</el-button>
+						<el-button type="primary" @click="addArticle('articleForm')">确认添加</el-button>
 					</el-form-item>
 				</el-form>
-				<el-dialog title="添加规格" v-model="dialogFormVisible">
-					<el-form :rules="specsFormrules" :model="specsForm">
-						<el-form-item label="规格" label-width="100px" prop="specs">
-							<el-input v-model="specsForm.specs" auto-complete="off"></el-input>
-						</el-form-item>
-						<el-form-item label="包装费" label-width="100px">
-							<el-input-number v-model="specsForm.packing_fee" :min="0" :max="100"></el-input-number>
-						</el-form-item>
-						<el-form-item label="价格" label-width="100px">
-							<el-input-number v-model="specsForm.price" :min="0" :max="10000"></el-input-number>
-						</el-form-item>
-					</el-form>
-					<div slot="footer" class="dialog-footer">
-						<el-button @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary" @click="addspecs">确 定</el-button>
-					</div>
-				</el-dialog>
+
 			</el-col>
 		</el-row>
 	</div>
@@ -93,62 +61,51 @@
 
 <script>
 import headTop from '@/components/headTop'
-import { getCategory, addCategory, addFood } from '@/api/getData'
-import { baseUrl, baseImgPath } from '@/config/env'
+import { getCategory, addCategory, addArticle } from '@/api/getData'
+import { quillEditor } from 'vue-quill-editor'
 export default {
 	data() {
 		return {
-			baseUrl,
-			baseImgPath,
-			categoryList:[],
-			foodForm: {
-				name: '',
-				description: '',
-				image_path: '',
-				activity: '',
-				attributes: [],
-				specs: [{
-					specs: '默认',
-					packing_fee: 0,
-					price: 20,
-				}],
+			categorySelect: '',
+			categoryList: [],
+			articleForm: {
+				title: '',
+				content: '',
+				author: '',
+				authorImg: '',
+				uid: '',
+				type: 1,
+				isTop: 0,
+				zan: 1,
+				location: '',
 			},
-			foodrules: {
-				name: [
-					{ required: true, message: '请输入食品名称', trigger: 'blur' },
+			arules: {
+				title: [
+					{ required: true, message: '请输入标题', trigger: 'blur' },
+				],
+				content: [
+					{ required: true, message: '请输入内容', trigger: 'blur' },
+				],
+				uid: [
+					{ required: true, message: '请输入内容', trigger: 'blur' },
 				],
 			},
-			attributes: [{
-				value: '新',
-				label: '新品'
-			}, {
-				value: '招牌',
-				label: '招牌'
-			},],
-			showAddCategory: false,
-			foodSpecs: 'one',
-			dialogFormVisible: false,
-			specsForm: {
-				specs: '',
-				packing_fee: 0,
-				price: 20,
-			},
-			specsFormrules: {
-				specs: [
-					{ required: true, message: '请输入规格', trigger: 'blur' },
-				],
+			editorOption: {
+
 			}
+
 		}
 	},
 	components: {
 		headTop,
+		quillEditor,
 	},
 	created() {
 		this.initData();
 	},
 	computed: {
-		selectValue: function() {
-			return this.categoryList[0] || {}
+		editor() {
+			return this.$refs.myQuillEditor.quill
 		}
 	},
 	methods: {
@@ -164,48 +121,6 @@ export default {
 				console.log(err)
 			}
 		},
-		addCategoryFun() {
-			this.showAddCategory = !this.showAddCategory;
-		},
-		submitcategoryForm(categoryForm) {
-			this.$refs[categoryForm].validate(async (valid) => {
-				if (valid) {
-					const params = {
-						name: this.categoryForm.name,
-						description: this.categoryForm.description
-					}
-					try {
-						const result = await addCategory(params);
-						if (result.status == 1) {
-							this.initData();
-							this.categoryForm.name = '';
-							this.categoryForm.description = '';
-							this.showAddCategory = false;
-							this.$message({
-								type: 'success',
-								message: '添加成功'
-							});
-						}
-					} catch (err) {
-						console.log(err)
-					}
-				} else {
-					this.$notify.error({
-						title: '错误',
-						message: '请检查输入是否正确',
-						offset: 100
-					});
-					return false;
-				}
-			});
-		},
-		uploadImg(res, file) {
-			if (res.status == 1) {
-				this.foodForm.image_path = res.image_path;
-			} else {
-				this.$message.error('上传图片失败！');
-			}
-		},
 		beforeImgUpload(file) {
 			const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
 			const isLt2M = file.size / 1024 / 1024 < 2;
@@ -218,51 +133,24 @@ export default {
 			}
 			return isRightType && isLt2M;
 		},
-		addspecs() {
-			this.foodForm.specs.push({ ...this.specsForm });
-			this.specsForm.specs = '';
-			this.specsForm.packing_fee = 0;
-			this.specsForm.price = 20;
-			this.dialogFormVisible = false;
+		onEditorReady(editor) {
+			console.log('editor ready!', editor)
 		},
-		handleDelete(index) {
-			this.foodForm.specs.splice(index, 1);
-		},
-		tableRowClassName(row, index) {
-			if (index === 1) {
-				return 'info-row';
-			} else if (index === 3) {
-				return 'positive-row';
-			}
-			return '';
-		},
-		addFood(foodForm) {
-			this.$refs[foodForm].validate(async (valid) => {
+		addArticle(articleForm) {
+			this.$refs[articleForm].validate(async (valid) => {
 				if (valid) {
 					const params = {
-						...this.foodForm,
-						category_id: this.selectValue.id,
+						...this.articleForm,
 					}
+					// console.log(JSON.stringify(params))
 					try {
-						const result = await addFood(params);
-						if (result.status == 1) {
-							console.log(result)
+						const result = await addArticle(params);
+						console.log(result)
+						if (result) {
 							this.$message({
 								type: 'success',
 								message: '添加成功'
 							});
-							this.foodForm = {
-								name: '',
-								description: '',
-								image_path: '',
-								activity: '',
-								attributes: [],
-								specs: [{
-									specs: '默认',
-									packing_fee: 0,
-									price: 20,
-								}],
-							}
 						} else {
 							this.$message({
 								type: 'error',

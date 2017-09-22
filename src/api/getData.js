@@ -144,8 +144,10 @@ export const getArticles = (offset,limit) => http.get(host + '/article?type=1&of
  * 查询分类
  */
 export const arCategory = () => http.get(host + '/catalog?type=1');
-
-export const addFood = () => http.get(host + '/catalog?type=1');
+/**
+ * 添加文章
+ */
+export const addArticle = (data) => http.post(host + '/article',data);
 export const addCategory = () => http.get(host + '/catalog?type=1');
 export const getCategory = () => http.get(host + '/catalog?type=1');
 export const foodCategory = () => http.get(host + '/catalog?type=1');

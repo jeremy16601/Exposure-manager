@@ -41,7 +41,7 @@ const routes = [
 		},{
 			path: '/addArticle',
 			component: addArticle,
-			meta: ['添加数据', '添加商品'],
+			meta: ['添加数据', '添加文章'],
 		},{
 			path: '/userList',
 			component: userList,
