@@ -49,24 +49,27 @@ export default {
 	},
 	mounted() {
 		this.showLogin = true;
+		console.log('login adminInfo=' + JSON.stringify(this.adminInfo));
 		if (!this.adminInfo.id) {
-			this.getAdminData()
+			this.getAdminData(this.adminInfo.id)
 		}
 	},
 	computed: {
 		...mapState(['adminInfo']),
 	},
 	methods: {
-		...mapActions(['getAdminData']),
+		...mapActions(['getAdminData', 'saveAdminData']),
 		async submitForm(formName) {
 			this.$refs[formName].validate(async (valid) => {
 				if (valid) {
 					const res = await login({ account: this.loginForm.account, password: this.loginForm.password })
-					if (res.length>0) {
+					if (res.length > 0) {
 						this.$message({
 							type: 'success',
 							message: '登录成功'
 						});
+						// console.log('role login=' + JSON.stringify(res))
+						this.saveAdminData(res[0]);
 						this.$router.push('manage')
 					} else {
 						this.$message({

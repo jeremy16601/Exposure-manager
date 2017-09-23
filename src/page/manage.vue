@@ -9,12 +9,12 @@
 						<el-menu-item index="userList">用户列表</el-menu-item>
 						<el-menu-item index="articleList">文章列表</el-menu-item>
 						<el-menu-item index="foodList">分类列表</el-menu-item>
-						<el-menu-item index="orderList">订单列表</el-menu-item>
+						<el-menu-item index="feedbackList">反馈列表</el-menu-item>
 						<el-menu-item index="adminList">管理员列表</el-menu-item>
 					</el-submenu>
 					<el-submenu index="3">
 						<template slot="title"><i class="el-icon-plus"></i>添加数据</template>
-						<el-menu-item index="addShop">添加商铺</el-menu-item>
+						<el-menu-item index="addRole">添加管理员</el-menu-item>
 						<el-menu-item index="addArticle">添加文章</el-menu-item>
 					</el-submenu>
 					<el-submenu index="4">

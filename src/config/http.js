@@ -63,6 +63,26 @@ export default {
             }
         )
     },
+    put(url, data) {
+        return axios({
+            method: 'put',
+            url,
+            data: qs.stringify(data),
+            timeout: 10000,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then(
+            (response) => {
+                return checkStatus(response)
+            }
+        ).then(
+            (res) => {
+                return checkCode(res)
+            }
+        )
+    },
     get(url, params) {
         return axios({
             method: 'get',

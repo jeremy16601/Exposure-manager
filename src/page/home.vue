@@ -69,7 +69,7 @@
 				const today = dtime().format('YYYY-MM-DD')
     			Promise.all([ userCount(today), articleCount(today), adminDayCount(today),  getUserCount(), getAritleCount(), adminCount()])
     			.then(res => {
-					console.log('获取数据：'+JSON.stringify(res))
+					// console.log('获取数据：'+JSON.stringify(res))
     				// this.apiCount = res[0].count;
     				this.userCount = res[0].count;
     				this.articleCount = res[1].count;
@@ -94,7 +94,7 @@
     			Promise.all(promiseArr).then(res => {
     				const resArr = [[],[],[],[]];
 					res.forEach((item, index) => {
-						if (item.status == 1) {
+						if (item) {
 							resArr[Math.floor(index/7)].push(item.count)
 						}
 					})

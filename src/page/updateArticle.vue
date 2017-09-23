@@ -2,10 +2,10 @@
 	<div>
 		<head-top></head-top>
 		<el-row>
-			<el-col :span="14" :offset="4">
+			<el-col>
 				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form">
-					<el-form-item label="分类">
-						<el-select v-model="categorySelect" placeholder="请选择分类" style="width:100%;">
+					<el-form-item label="分类" class="item20">
+						<el-select v-model="categorySelect" placeholder="请选择分类">
 							<el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
@@ -14,10 +14,10 @@
 					<el-form-item label="标题" prop="title">
 						<el-input v-model="articleForm.title"></el-input>
 					</el-form-item>
-					<el-form-item label="发布者" prop="author">
+					<el-form-item label="发布者" prop="author" class="item20">
 						<el-input v-model="articleForm.author"></el-input>
 					</el-form-item>
-					<el-form-item label="uid" prop="uid">
+					<el-form-item label="uid" prop="uid" class="item20">
 						<el-input v-model="articleForm.uid"></el-input>
 					</el-form-item>
 					<el-form-item label="是否置顶" prop="isTop">
@@ -26,13 +26,13 @@
 							</el-switch>
 						</el-tooltip>
 					</el-form-item>
-					<el-form-item label="类型" prop="resource">
+					<el-form-item label="类型" prop="type">
 						<el-radio-group v-model="articleForm.type">
 							<el-radio label="1">热门推荐</el-radio>
 							<el-radio label="2">首页推荐</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="点赞数量" prop="zan">
+					<el-form-item label="点赞数量" prop="zan" class="item20">
 						<el-input v-model="articleForm.zan"></el-input>
 					</el-form-item>
 					<el-form-item label="位置" prop="location">
@@ -50,7 +50,7 @@
 					</el-form-item>
 
 					<el-form-item>
-						<el-button type="primary" @click="addArticle('articleForm')">确认添加</el-button>
+						<el-button type="primary" @click="updateArticle('articleForm')">点击更新</el-button>
 					</el-form-item>
 				</el-form>
 
@@ -61,7 +61,7 @@
 
 <script>
 import headTop from '@/components/headTop'
-import { getCategory, getArticleByid, addArticle } from '@/api/getData'
+import { getCategory, getArticleByid, updateArticle } from '@/api/getData'
 import { quillEditor } from 'vue-quill-editor'
 export default {
 	data() {
@@ -69,27 +69,14 @@ export default {
 			categorySelect: '',
 			categoryList: [],
 			aid: '',//传过来的文章id
-			articleForm: {
-				title: '',
-				content: '',
-				author: '',
-				authorImg: '',
-				uid: '',
-				type: 1,
-				isTop: 0,
-				zan: 1,
-				location: '',
-			},
+			articleForm: '',
 			arules: {
 				title: [
 					{ required: true, message: '请输入标题', trigger: 'blur' },
 				],
 				content: [
 					{ required: true, message: '请输入内容', trigger: 'blur' },
-				],
-				uid: [
-					{ required: true, message: '请输入内容', trigger: 'blur' },
-				],
+				]
 			},
 			editorOption: {
 
@@ -101,16 +88,22 @@ export default {
 		headTop,
 		quillEditor,
 	},
+	beforecreated(){
+		console.log('beforecreated');
+	},
 	created() {
-		this.aid = this.$route.query.aid;;
+		this.aid = this.$route.query.aid;
 		this.initData();
-		this.initDetail(this.aid);
+		console.log('articleForm=' + this.articleForm);
 	},
 	computed: {
-
 		editor() {
 			return this.$refs.myQuillEditor.quill
 		}
+	},
+	watch: {
+		// 如果路由有变化，会再次执行该方法
+		'$route': 'initData'
 	},
 	methods: {
 		async initData() {
@@ -124,11 +117,13 @@ export default {
 			} catch (err) {
 				console.log(err)
 			}
-		},async initDetail(aid) {
+			this.initDetail();
+		}, async initDetail() {
 			try {
-				const result = await getArticleByid(aid);
+				const result = await getArticleByid(this.aid);
 				if (result.length > 0) {
 					this.articleForm = result[0];
+					// console.log(JSON.stringify(result))
 				} else {
 					console.log(result)
 				}
@@ -151,7 +146,7 @@ export default {
 		onEditorReady(editor) {
 			// console.log('editor ready!', editor)
 		},
-		addArticle(articleForm) {
+		updateArticle(articleForm) {
 			this.$refs[articleForm].validate(async (valid) => {
 				if (valid) {
 					const params = {
@@ -159,12 +154,12 @@ export default {
 					}
 					// console.log(JSON.stringify(params))
 					try {
-						const result = await addArticle(params);
+						const result = await updateArticle(this.aid, params);
 						console.log(result)
 						if (result) {
 							this.$message({
 								type: 'success',
-								message: '添加成功'
+								message: '更新成功'
 							});
 						} else {
 							this.$message({
@@ -199,6 +194,10 @@ export default {
 		border-radius: 6px;
 		transition: all 400ms;
 	}
+}
+
+.item20 {
+	width: 20%;
 }
 
 .food_form {

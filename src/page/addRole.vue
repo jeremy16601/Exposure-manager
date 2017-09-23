@@ -164,7 +164,7 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {cityGuess, addShop, searchplace, foodCategory} from '@/api/getData'
+    import {cityGuess, addRole, searchplace, foodCategory} from '@/api/getData'
     import {baseUrl, baseImgPath} from '@/config/env'
     export default {
     	data(){
@@ -388,7 +388,7 @@
 							category: this.selectedCategory.join('/')
 						})
 						try{
-							let result = await addShop(this.formData);
+							let result = await addRole(this.formData);
 							if (result.status == 1) {
 								this.$message({
 					            	type: 'success',

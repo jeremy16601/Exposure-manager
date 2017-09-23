@@ -19,7 +19,7 @@ export const signout = () => http.get('/admin/singout');
  * 获取管理员信息
  */
 
-export const getAdminInfo = (id) => http.get(host + '/role');
+export const getAdminInfo = (id) => http.get(host + '/role/'+id);
 
 /**
  * api请求量
@@ -83,7 +83,7 @@ export const cityGuess = () => http.get('/v1/cities', {
  * 添加商铺
  */
 
-export const addShop = data => http.get('/shopping/addShop', data, 'POST');
+export const addRole = data => http.get('/shopping/addRole', data, 'POST');
 
 /**
  * 获取搜索地址
@@ -156,6 +156,10 @@ export const arCategory = () => http.get(host + '/catalog?type=1');
  * 添加文章
  */
 export const addArticle = (data) => http.post(host + '/article',data);
+/**
+ * 更新文章
+ */
+export const updateArticle = (aid,data) => http.put(host + '/article/'+aid,data);
 export const addCategory = () => http.get(host + '/catalog?type=1');
 export const getCategory = () => http.get(host + '/catalog?type=1');
 export const foodCategory = () => http.get(host + '/catalog?type=1');
