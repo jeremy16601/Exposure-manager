@@ -22,7 +22,6 @@
                 <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="mini" type="Success" @click="addArticle(scope.$index, scope.row)">添加</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -120,13 +119,15 @@ export default {
             this.getArticles()
         },
         handleEdit(index, row) {
-            this.selectTable = row;
-            this.address.address = row.address;
-            this.dialogFormVisible = true;
-            this.selectedCategory = row.category.split('/');
-            if (!this.categoryOptions.length) {
-                this.getCategory();
-            }
+            // console.log(row)
+            this.$router.push({ path: 'updateArticle', query: { aid: row.id } })
+            // this.selectTable = row;
+            // this.address.address = row.address;
+            // this.dialogFormVisible = true;
+            // this.selectedCategory = row.category.split('/');
+            // if (!this.categoryOptions.length) {
+            //     this.getCategory();
+            // }
         },
         addArticle(index, row) {
             this.$router.push({ path: 'addGoods', query: { restaurant_id: row.id } })
@@ -134,7 +135,7 @@ export default {
         async handleDelete(index, row) {
             try {
                 const res = await deleteArticle(row.id);
-                if (res.status == 1) {
+                if (res) {
                     this.$message({
                         type: 'success',
                         message: '删除成功'

@@ -8,6 +8,7 @@ const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manag
 const home = r => require.ensure([], () => r(require('@/page/home')), 'home');
 const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'addShop');
 const addArticle = r => require.ensure([], () => r(require('@/page/addArticle')), 'addArticle');
+const updateArticle = r => require.ensure([], () => r(require('@/page/updateArticle')), 'updateArticle');
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList');
 const articleList = r => require.ensure([], () => r(require('@/page/articleList')), 'articleList');
 const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList');
@@ -42,6 +43,10 @@ const routes = [
 			path: '/addArticle',
 			component: addArticle,
 			meta: ['添加数据', '添加文章'],
+		},{
+			path: '/updateArticle',
+			component: updateArticle,
+			meta: ['更新数据', '更新文章'],
 		},{
 			path: '/userList',
 			component: userList,

@@ -81,5 +81,24 @@ export default {
                 return checkCode(res)
             }
         )
+    },
+    delete(url, params) {
+        return axios({
+            method: 'delete',
+            url,
+            params, // get 请求时带的参数
+            timeout: 10000,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(
+            (response) => {
+                return checkStatus(response)
+            }
+        ).then(
+            (res) => {
+                return checkCode(res)
+            }
+        )
     }
 }

@@ -19,7 +19,7 @@ export const signout = () => http.get('/admin/singout');
  * 获取管理员信息
  */
 
-export const getAdminInfo = () => http.get(host + '/role');
+export const getAdminInfo = (id) => http.get(host + '/role');
 
 /**
  * api请求量
@@ -117,7 +117,12 @@ export const getCatalog = data => http.get(host + '/catalog', data);
  */
 
 export const getArticleList = data => http.get(host + '/article', data);
+/**
+ * 获取文章详情
+ */
 
+export const getArticleByid = aid => http.get(host + '/article/'+aid);
+ 
 /**
  * 获取用户信息
  */
@@ -125,8 +130,11 @@ export const getArticleList = data => http.get(host + '/article', data);
 export const getUserInfo = uid => http.get(host + '/user/' + uid);
 
 export const getUserCity = uid => http.get(host + '/user/' + uid);
-
-export const deleteArticle = aid => http.get(host + '/article/' + aid);
+/**
+ * 删除文章
+ * @param {*} aid 
+ */
+export const deleteArticle = aid => http.delete(host + '/article/' + aid);
 /**
  * 
  * @param {*文章详情} aid 
