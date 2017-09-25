@@ -10,20 +10,19 @@
                 </el-table-column>
                 <el-table-column label="标题" prop="title" width="400">
                 </el-table-column>
-                <el-table-column label="状态" prop="status">
-                </el-table-column>
                 <el-table-column label="查看" prop="view_times">
                 </el-table-column>
                 <el-table-column label="赞" prop="zan">
                 </el-table-column>
-                <el-table-column label="发布日期" >
-                     <template scope="scope">
+                <el-table-column label="发布日期">
+                    <template scope="scope">
                         {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
                     </template>
                 </el-table-column>
-
-                <el-table-column label="操作"  >
+                <el-table-column label="操作">
                     <template scope="scope">
+                        <el-button size="mini" v-if='scope.row.status==1' type="warning" @click="handleClose(scope.$index, scope.row)">隐藏</el-button>
+                         <el-button size="mini" v-else type="info" @click="handleClose(scope.$index, scope.row)">显示</el-button> 
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -41,7 +40,7 @@
 <script>
 import headTop from '../components/headTop'
 import { baseUrl, baseImgPath } from '@/config/env'
-import { getArticles, getACount, arCategory, searchplace, deleteArticle } from '@/api/getData'
+import { getArticles, updateArticle, getACount, arCategory, searchplace, deleteArticle } from '@/api/getData'
 export default {
     data() {
         return {
@@ -121,16 +120,32 @@ export default {
             this.offset = (val - 1) * this.limit;
             this.getArticles()
         },
+        async  handleClose(index, row) {
+
+            if (row.status == 1) {
+                row.status = 0;
+            } else {
+                row.status = 1;
+            }
+            try {
+                const result = await updateArticle(row.id, row);
+                if (result) {
+                    this.$message({
+                        type: 'success',
+                        message: '更新成功'
+                    });
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: result.message
+                    });
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
         handleEdit(index, row) {
-            // console.log(row)
             this.$router.push({ path: 'updateArticle', query: { aid: row.id } })
-            // this.selectTable = row;
-            // this.address.address = row.address;
-            // this.dialogFormVisible = true;
-            // this.selectedCategory = row.category.split('/');
-            // if (!this.categoryOptions.length) {
-            //     this.getCategory();
-            // }
         },
         addArticle(index, row) {
             this.$router.push({ path: 'addGoods', query: { restaurant_id: row.id } })

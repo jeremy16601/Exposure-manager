@@ -165,3 +165,7 @@ export const getCategory = () => http.get(host + '/catalog?type=1');
 export const foodCategory = () => http.get(host + '/catalog?type=1');
 //查询新增文章总数
 export const getAritleCount = () => http.get(host + '/article?type=count');
+/**
+ * 反馈列表
+ */
+export const getFeedback = (offset,limit) => http.get(host + '/feedback?offset='+offset+'&limit='+limit);

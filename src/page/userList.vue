@@ -5,9 +5,9 @@
             <el-table :data="users" highlight-current-row style="width: 100%">
                 <el-table-column property="id" label="ID" width="100">
                 </el-table-column>
-                <el-table-column label="注册日期" width="220">
+                <el-table-column label="头像">
                     <template scope="scope">
-                        {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
+                        <img :src="scope.row.headimg" class="headimg">
                     </template>
                 </el-table-column>
                 <el-table-column property="name" label="用户姓名" width="220">
@@ -16,11 +16,22 @@
                 </el-table-column>
                 <el-table-column property="mobile" label="手机">
                 </el-table-column>
-                <el-table-column property="sex" label="性别">
+                <el-table-column label="性别">
+                    <template scope="scope">
+                        <div v-if='scope.row.sex==0'>男</div>
+                        <div v-else>女</div>
+                    </template>
+                </el-table-column>
+                  <el-table-column property="address" label="地址">
+                </el-table-column>
+                <el-table-column label="注册日期" width="220">
+                    <template scope="scope">
+                        {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="10" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
         </div>
@@ -36,7 +47,7 @@ export default {
             users: [],
             currentRow: null,
             offset: 0,
-            limit: 15,
+            limit: 10,
             count: 0,
             currentPage: 1,
         }
@@ -82,5 +93,11 @@ export default {
 @import '../style/mixin';
 .table_container {
     padding: 20px;
+}
+
+.headimg {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
 }
 </style>
