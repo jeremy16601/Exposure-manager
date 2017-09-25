@@ -8,11 +8,14 @@ import 'element-ui/lib/theme-default/index.css'
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI);
+Vue.use(require('vue-moment-jalaali'));
 
 new Vue({
-	el: '#app',
-	router,
-	store,
-	template: '<App/>',
-	components: { App }
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
+    components: {
+        App
+    }
 })

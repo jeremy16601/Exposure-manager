@@ -16,10 +16,13 @@
                 </el-table-column>
                 <el-table-column label="赞" prop="zan">
                 </el-table-column>
-                <el-table-column label="发布日期" prop="created_at">
+                <el-table-column label="发布日期" >
+                     <template scope="scope">
+                        {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
+                    </template>
                 </el-table-column>
 
-                <el-table-column label="操作" width="200">
+                <el-table-column label="操作"  >
                     <template scope="scope">
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>

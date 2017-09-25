@@ -5,7 +5,10 @@
             <el-table :data="users" highlight-current-row style="width: 100%">
                 <el-table-column property="id" label="ID" width="100">
                 </el-table-column>
-                <el-table-column property="created_at" label="注册日期" width="220">
+                <el-table-column label="注册日期" width="220">
+                    <template scope="scope">
+                        {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
+                    </template>
                 </el-table-column>
                 <el-table-column property="name" label="用户姓名" width="220">
                 </el-table-column>
