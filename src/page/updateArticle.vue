@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<head-top></head-top>
-		<el-row>
+		<el-row v-loading.fullscreen.lock="fullscreenLoading">
 			<el-col>
 				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form">
 					<el-form-item label="分类" class="item20">
-						<el-select v-model="categorySelect" placeholder="请选择分类">
-							<el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id">
+						<el-select v-model="articleForm.catalog_id" placeholder="请选择分类">
+							<el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -63,10 +63,10 @@ import { getCategory, getArticleByid, updateArticle } from '@/api/getData'
 import { quillEditor } from 'vue-quill-editor'
 export default {
 	data() {
-		return {
-			categorySelect: '',
+		return { 
 			categoryList: [],
 			articleForm: '',
+			fullscreenLoading: true,
 			arules: {
 				title: [
 					{ required: true, message: '请输入标题', trigger: 'blur' },
@@ -85,19 +85,31 @@ export default {
 		headTop,
 		quillEditor,
 	},
-	// mounted() {
-	// 	this.initData(this.$route.query.aid);
-	// },
 	computed: {
 		editor() {
 			return this.$refs.myQuillEditor.quill
 		}
 	},
-	beforeRouteEnter(to, from, next) {
-		console.log('beforeRouteEnter router--');
-		next(vm => {
-			vm.initData(vm.$route.query.aid);
-		})
+	// beforeRouteEnter(to, from, next) {
+	// 	next(vm => {
+	// 		console.log('beforeRouteEnter===')
+	// 		vm.initData(vm.$route.query.aid);
+	// 	})
+	// },
+	created() {
+		// 组件创建完后获取数据，
+		// 此时 data 已经被 observed 了
+		console.log('created+initData()')
+		this.fullscreenLoading = true;
+		this.initData(this.$route.query.aid)
+	},
+	watch: {
+		// 如果路由有变化，会再次执行该方法
+		$route(next) {
+			console.log('watch()+initData()')
+			this.fullscreenLoading = true;
+			this.initData(this.$route.query.aid)
+		}
 	},
 	methods: {
 		async initData(aid) {
@@ -117,13 +129,17 @@ export default {
 				const result = await getArticleByid(aid);
 				if (result.length > 0) {
 					this.articleForm = result[0];
-					// console.log(JSON.stringify(result))
+					this.fullscreenLoading = false;
+					// console.log(JSON.stringify(this.articleForm))
 				} else {
-					console.log(result)
+					this.fullscreenLoading = false;
+					console.log('initDetail null=' + result)
 				}
 			} catch (err) {
+				this.fullscreenLoading = false;
 				console.log(err)
 			}
+
 		},
 		beforeImgUpload(file) {
 			const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
@@ -191,7 +207,7 @@ export default {
 }
 
 .item20 {
-	width: 20%;
+	width: 30%;
 }
 
 .food_form {

@@ -11,7 +11,7 @@ const addArticle = r => require.ensure([], () => r(require('@/page/addArticle'))
 const updateArticle = r => require.ensure([], () => r(require('@/page/updateArticle')), 'updateArticle');
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList');
 const articleList = r => require.ensure([], () => r(require('@/page/articleList')), 'articleList');
-const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList');
+const catalogList = r => require.ensure([], () => r(require('@/page/catalogList')), 'catalogList');
 const feedbackList = r => require.ensure([], () => r(require('@/page/feedbackList')), 'feedbackList');
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList');
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor');
@@ -56,9 +56,9 @@ const routes = [
 			component: articleList,
 			meta: ['数据管理', '文章列表'],
 		},{
-			path: '/foodList',
-			component: foodList,
-			meta: ['数据管理', '食品列表'],
+			path: '/catalogList',
+			component: catalogList,
+			meta: ['数据管理', '分类列表'],
 		},{
 			path: '/feedbackList',
 			component: feedbackList,

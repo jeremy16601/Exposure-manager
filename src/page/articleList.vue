@@ -2,8 +2,11 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
-            <el-table :data="tableData" highlight-current-row style="width: 100%">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                <el-tab-pane v-for="c in categoryList" :label="c.name" :name="c.id+''"> </el-tab-pane>
+            </el-tabs>
 
+            <el-table :data="tableData" highlight-current-row style="width: 100%" v-loading.body="loading">
                 <el-table-column label="ID" property="id" width="80">
                 </el-table-column>
                 <el-table-column label="发布者" prop="author">
@@ -40,7 +43,7 @@
 <script>
 import headTop from '../components/headTop'
 import { baseUrl, baseImgPath } from '@/config/env'
-import { getArticles, updateArticle, getACount, arCategory, searchplace, deleteArticle } from '@/api/getData'
+import { getArticles, updateArticle, getACount, getCategory, searchplace, deleteArticle } from '@/api/getData'
 export default {
     data() {
         return {
@@ -50,14 +53,22 @@ export default {
             offset: 0,
             limit: 15,
             count: 0,
+            loading: true,
             tableData: [],
             currentPage: 1,
             selectTable: {},
             dialogFormVisible: false,
-            categoryOptions: [],
-            selectedCategory: [],
+            categoryList: [],
+            selectedCategory: '',
+            activeName: 'all',
             address: {},
         }
+    },
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            vm.loading = true;
+            vm.initData();
+        })
     },
     created() {
         this.initData();
@@ -65,13 +76,21 @@ export default {
     components: {
         headTop,
     },
-    watch: {
-        '$route'(to, from) {
-            // 对路由变化作出响应...
-            // console.log('articleList  router---')
-        }
-    },
+    // watch: {
+    //     $route() {
+    //         // 对路由变化作出响应...
+    //         console.log('articleList  router---');
+    //         // this.initData();
+    //     }
+    // },
     methods: {
+        handleClick(tab, event) {
+            //选项卡点击
+            // console.log(tab.name);
+            this.loading = true;
+            //根据分类id查询
+            this.initData();
+        },
         async initData() {
             try {
                 // this.city = await cityGuess();
@@ -79,44 +98,32 @@ export default {
                 if (countData.status == 1) {
                     this.count = countData.count;
                 } else {
-                    throw new Error('获取数据失败');
+                    throw new Error('获取countData失败');
                 }
-                this.getArticles();
+                this.getCategory();
             } catch (err) {
-                console.log('获取数据失败', err);
+                this.loading = false;
+                console.log('获取countData失败', err);
             }
         },
         async getCategory() {
             try {
-                const categories = await arCategory();
-                categories.forEach(item => {
-                    if (item.sub_categories.length) {
-                        const addnew = {
-                            value: item.name,
-                            label: item.name,
-                            children: []
-                        }
-                        item.sub_categories.forEach((subitem, index) => {
-                            if (index == 0) {
-                                return
-                            }
-                            addnew.children.push({
-                                value: subitem.name,
-                                label: subitem.name,
-                            })
-                        })
-                        this.categoryOptions.push(addnew)
-                    }
-                })
+                const result = await getCategory();
+                // console.log(JSON.stringify(result))
+                if (result.length > 0) {
+                    this.categoryList = result;
+                    this.getArticles();
+                }
             } catch (err) {
-                console.log('获取商铺种类失败', err);
+                console.log(err)
             }
         },
         async getArticles() {
             const { latitude, longitude } = this.city;
-            console.log('文章列表：offset=' + this.offset + 'limit:' + this.limit)
-            this.tableData = await getArticles(this.offset, this.limit);
-
+            console.log('activeName=='+this.activeName);
+            // console.log('文章列表：offset=' + this.offset + 'limit:' + this.limit)
+            this.tableData = await getArticles(this.activeName, this.offset, this.limit);
+            this.loading = false;
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -195,28 +202,6 @@ export default {
         addressSelect(vale) {
             const { address, latitude, longitude } = vale;
             this.address = { address, latitude, longitude };
-        },
-        async updateShop() {
-            // this.dialogFormVisible = false;
-            // try{
-            //     Object.assign(this.selectTable, this.address);
-            //     this.selectTable.category = this.selectedCategory.join('/');
-            //     const res = await updateResturant(this.selectTable)
-            //     if (res.status == 1) {
-            //         this.$message({
-            //             type: 'success',
-            //             message: '更新店铺信息成功'
-            //         });
-            //         this.getArticles();
-            //     }else{
-            //         this.$message({
-            //             type: 'error',
-            //             message: res.message
-            //         });
-            //     }
-            // }catch(err){
-            //     console.log('更新餐馆信息失败', err);
-            // }
         },
     },
 }

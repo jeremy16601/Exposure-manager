@@ -2,7 +2,7 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
-            <el-table :data="users" highlight-current-row style="width: 100%">
+            <el-table :data="users" highlight-current-row style="width: 100%" v-loading.body="loading">
                 <el-table-column property="id" label="ID" width="100">
                 </el-table-column>
                 <el-table-column label="头像">
@@ -22,7 +22,7 @@
                         <div v-else>女</div>
                     </template>
                 </el-table-column>
-                  <el-table-column property="address" label="地址">
+                <el-table-column property="address" label="地址">
                 </el-table-column>
                 <el-table-column label="注册日期" width="220">
                     <template scope="scope">
@@ -50,13 +50,20 @@ export default {
             limit: 10,
             count: 0,
             currentPage: 1,
+            loading: true
         }
     },
     components: {
         headTop,
     },
     created() {
-        this.initData();
+
+    },
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            vm.loading = true;
+            vm.initData();
+        })
     },
     methods: {
         async initData() {
@@ -83,7 +90,9 @@ export default {
         async getUsers() {
             const Users = await getUserList({ offset: this.offset, limit: this.limit });
             this.users = Users;
-
+            if (this.users) {
+                this.loading = false;
+            }
         }
     },
 }
