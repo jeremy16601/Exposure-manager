@@ -22,14 +22,14 @@
                 <el-table-column label="操作">
                     <template scope="scope">
                         <el-button size="mini" v-if='scope.row.status==1' type="warning" @click="handleClose(scope.$index, scope.row)">隐藏</el-button>
-                         <el-button size="mini" v-else type="info" @click="handleClose(scope.$index, scope.row)">显示</el-button> 
+                        <el-button size="mini" v-else type="info" @click="handleClose(scope.$index, scope.row)">显示</el-button>
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="Pagination">
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="10" layout="total, prev, pager, next" :total="count">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
 
@@ -48,7 +48,7 @@ export default {
             baseImgPath,
             city: {},
             offset: 0,
-            limit: 10,
+            limit: 15,
             count: 0,
             tableData: [],
             currentPage: 1,
@@ -64,6 +64,12 @@ export default {
     },
     components: {
         headTop,
+    },
+    watch: {
+        '$route'(to, from) {
+            // 对路由变化作出响应...
+            // console.log('articleList  router---')
+        }
     },
     methods: {
         async initData() {

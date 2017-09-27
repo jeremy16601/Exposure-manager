@@ -27,10 +27,8 @@
 						</el-tooltip>
 					</el-form-item>
 					<el-form-item label="类型" prop="type">
-						<el-radio-group v-model="articleForm.type">
-							<el-radio label="1">热门推荐</el-radio>
-							<el-radio label="2">首页推荐</el-radio>
-						</el-radio-group>
+						<el-radio v-model="articleForm.type" label="1">热门推荐</el-radio>
+						<el-radio v-model="articleForm.type" label="2">首页推荐</el-radio>
 					</el-form-item>
 					<el-form-item label="点赞数量" prop="zan" class="item20">
 						<el-input v-model="articleForm.zan"></el-input>
@@ -68,7 +66,6 @@ export default {
 		return {
 			categorySelect: '',
 			categoryList: [],
-			aid: '',//传过来的文章id
 			articleForm: '',
 			arules: {
 				title: [
@@ -88,25 +85,22 @@ export default {
 		headTop,
 		quillEditor,
 	},
-	beforecreated(){
-		console.log('beforecreated');
-	},
-	created() {
-		this.aid = this.$route.query.aid;
-		this.initData();
-		console.log('articleForm=' + this.articleForm);
-	},
+	// mounted() {
+	// 	this.initData(this.$route.query.aid);
+	// },
 	computed: {
 		editor() {
 			return this.$refs.myQuillEditor.quill
 		}
 	},
-	watch: {
-		// 如果路由有变化，会再次执行该方法
-		'$route': 'initData'
+	beforeRouteEnter(to, from, next) {
+		console.log('beforeRouteEnter router--');
+		next(vm => {
+			vm.initData(vm.$route.query.aid);
+		})
 	},
 	methods: {
-		async initData() {
+		async initData(aid) {
 			try {
 				const result = await getCategory();
 				if (result.length > 0) {
@@ -117,10 +111,10 @@ export default {
 			} catch (err) {
 				console.log(err)
 			}
-			this.initDetail();
-		}, async initDetail() {
+			this.initDetail(aid);
+		}, async initDetail(aid) {
 			try {
-				const result = await getArticleByid(this.aid);
+				const result = await getArticleByid(aid);
 				if (result.length > 0) {
 					this.articleForm = result[0];
 					// console.log(JSON.stringify(result))
