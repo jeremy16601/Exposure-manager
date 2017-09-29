@@ -67,11 +67,12 @@ export default {
     beforeRouteEnter(to, from, next) {
         next(vm => {
             vm.loading = true;
-            vm.initData();
+            vm.activeName='all';
+            vm.initData('all');
         })
     },
     created() {
-        this.initData();
+        // this.initData('all');
     },
     components: {
         headTop,
@@ -89,13 +90,13 @@ export default {
             // console.log(tab.name);
             this.loading = true;
             //根据分类id查询
-            this.initData();
+            this.initData(tab.name);
         },
-        async initData() {
+        async initData(catalog_id) {
             try {
                 // this.city = await cityGuess();
-                const countData = await getACount();
-                if (countData.status == 1) {
+                const countData = await getACount(catalog_id);
+                if (countData.status === 1) {
                     this.count = countData.count;
                 } else {
                     throw new Error('获取countData失败');
@@ -120,8 +121,8 @@ export default {
         },
         async getArticles() {
             const { latitude, longitude } = this.city;
-            console.log('activeName=='+this.activeName);
-            // console.log('文章列表：offset=' + this.offset + 'limit:' + this.limit)
+            console.log('activeName==' + this.activeName);
+            console.log('文章列表：offset=' + this.offset + 'limit:' + this.limit)
             this.tableData = await getArticles(this.activeName, this.offset, this.limit);
             this.loading = false;
         },

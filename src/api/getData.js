@@ -143,7 +143,7 @@ export const getArticleDetail = aid => http.get(host + '/article/' + aid);
 /**
  * 文章总数
  */
-export const getACount = () => http.get(host + '/article?type=count');
+export const getACount = (catalog_id) => http.get(host + '/article?type=count&catalog_id='+catalog_id);
 /**
  * 文章列表
  */

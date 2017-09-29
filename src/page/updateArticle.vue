@@ -20,8 +20,8 @@
 					<el-form-item label="uid" prop="uid" class="item20">
 						<el-input v-model="articleForm.uid"></el-input>
 					</el-form-item>
-					<el-form-item label="是否置顶" prop="isTop">
-						<el-tooltip :content="'Switch value: ' + articleForm.isTop" placement="top">
+					<el-form-item label="是否置顶"  >
+						<el-tooltip :content="'Switch value: ' +  articleForm.isTop" placement="top">
 							<el-switch v-model="articleForm.isTop" on-color="#13ce66" off-color="#ff4949" on-value="1" off-value="0">
 							</el-switch>
 						</el-tooltip>
@@ -66,6 +66,7 @@ export default {
 		return { 
 			categoryList: [],
 			articleForm: '',
+			switchValue:false,
 			fullscreenLoading: true,
 			arules: {
 				title: [
@@ -159,6 +160,7 @@ export default {
 		updateArticle(articleForm) {
 			this.$refs[articleForm].validate(async (valid) => {
 				if (valid) {
+					//设置置顶
 					const params = {
 						...this.articleForm,
 					}

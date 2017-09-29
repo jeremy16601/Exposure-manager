@@ -5,8 +5,8 @@
 			<el-col :span="14" :offset="4">
 				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form">
 					<el-form-item label="分类">
-						<el-select v-model="categorySelect" placeholder="请选择分类" style="width:100%;">
-							<el-option v-for="item in categoryList" :key="item.name" :label="item.name" :value="item.id">
+						<el-select v-model="articleForm.catalog_id" placeholder="请选择分类">
+							<el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -70,12 +70,14 @@ export default {
 			categoryList: [],
 			articleForm: {
 				title: '',
+				catalog_id:0,
 				content: '',
 				author: '',
 				authorImg: '',
 				uid: '',
 				type: 1,
 				isTop: 0,
+				view_times:1,
 				zan: 1,
 				location: '',
 			},
