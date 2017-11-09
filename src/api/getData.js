@@ -169,3 +169,7 @@ export const getAritleCount = () => http.get(host + '/article?type=count');
  * 反馈列表
  */
 export const getFeedback = (offset, limit) => http.get(host + '/feedback?offset=' + offset + '&limit=' + limit);
+
+
+export const btc_getbalance=() => http.get('http://localhost:7002/balance');
+export const btc_getOrderList=(coinname) => http.post('http://localhost:7002/getOrderList',coinname);
