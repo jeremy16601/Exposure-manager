@@ -1,9 +1,7 @@
 <template>
 	<div>
 		<head-top></head-top>
-		<el-row v-loading.fullscreen.lock="fullscreenLoading">
-			<el-col>
-				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form">
+				<el-form :model="articleForm" :rules="arules" ref="articleForm" label-width="110px" class="form food_form" v-loading.fullscreen.lock="fullscreenLoading">
 					<el-form-item label="分类" class="item20">
 						<el-select v-model="articleForm.catalog_id" placeholder="请选择分类">
 							<el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id">
@@ -20,9 +18,9 @@
 					<el-form-item label="uid" prop="uid" class="item20">
 						<el-input v-model="articleForm.uid"></el-input>
 					</el-form-item>
-					<el-form-item label="是否置顶"  >
-						<el-tooltip :content="'Switch value: ' +  articleForm.isTop" placement="top">
-							<el-switch v-model="articleForm.isTop" on-color="#13ce66" off-color="#ff4949" on-value="1" off-value="0">
+					<el-form-item label="是否置顶" >
+						<el-tooltip :content="'Switch value: ' +  articleForm.isTop" placement="top" >
+							<el-switch v-model="isTop" on-color="#13ce66" off-color="#ff4949"  >
 							</el-switch>
 						</el-tooltip>
 					</el-form-item>
@@ -35,7 +33,6 @@
 					</el-form-item>
 					<el-form-item label="位置" prop="location">
 						<el-input v-model="articleForm.location"></el-input>
-					</el-form-item>
 					</el-form-item>
 					<el-form-item label="头像" prop="authorImg">
 						<el-input v-model="articleForm.authorImg"></el-input>
@@ -52,13 +49,14 @@
 					</el-form-item>
 				</el-form>
 
-			</el-col>
-		</el-row>
 	</div>
 </template>
 
 <script>
 import headTop from "@/components/headTop";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 import { getCategory, getArticleByid, updateArticle } from "@/api/getData";
 import { quillEditor } from "vue-quill-editor";
 export default {
@@ -66,8 +64,8 @@ export default {
     return {
       categoryList: [],
       articleForm: "",
-      switchValue: false,
       fullscreenLoading: true,
+      isTop: false,
       arules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
         content: [{ required: true, message: "请输入内容", trigger: "blur" }]
@@ -93,7 +91,6 @@ export default {
   created() {
     // 组件创建完后获取数据，
     // 此时 data 已经被 observed 了
-    console.log("created+initData()");
     this.fullscreenLoading = true;
     this.initData(this.$route.query.aid);
   },
@@ -124,6 +121,11 @@ export default {
         const result = await getArticleByid(aid);
         if (result.length > 0) {
           this.articleForm = result[0];
+          if (result[0].isTop == 1) {
+            this.isTop = true;
+          } else {
+            this.isTop = false;
+          }
           this.fullscreenLoading = false;
           // console.log(JSON.stringify(this.articleForm))
         } else {
@@ -158,9 +160,9 @@ export default {
           const params = {
             ...this.articleForm
           };
+          console.log(params);
           try {
             const result = await updateArticle(params.id, params);
-            console.log(result);
             if (result) {
               this.$message({
                 type: "success",
@@ -169,7 +171,7 @@ export default {
             } else {
               this.$message({
                 type: "error",
-                message: result
+                message: result.message
               });
             }
           } catch (err) {
@@ -203,7 +205,7 @@ export default {
 }
 
 .item20 {
-  width: 30%;
+  width: 50%;
 }
 
 .food_form {

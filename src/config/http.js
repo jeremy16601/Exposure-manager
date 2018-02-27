@@ -26,7 +26,7 @@ function checkStatus(response) {
     // 异常状态下，把错误信息返回去
     return {
         status: -404,
-        msg: response
+        msg: '网络异常'
     }
 }
 

@@ -2,7 +2,7 @@
   "name": "vue2-manage",
   "version": "1.0.1",
   "description": "vue2-manage",
-  "author": "cangdu <1264889788@qq.com>",
+  "author": "jeremy",
   "license": "GPL",
   "private": true,
   "scripts": {
@@ -15,17 +15,17 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.18.0",
     "echarts": "^3.5.4",
-    "element-ui": "^1.2.9",
-    "moment": "^2.18.1",
+    "element-ui": "^2.2.0",
+    "moment": "^2.20.1",
     "time-formater": "^1.0.1",
-    "vue": "^2.2.6",
+    "vue": "^2.5.13",
     "vue-moment-jalaali": "^2.0.0",
-    "vue-quill-editor": "^2.2.1",
-    "vue-router": "^2.3.1",
-    "vue-simplemde": "^0.3.8",
-    "vuex": "^2.3.1"
+    "vue-quill-editor": "^3.0.5",
+    "vue-router": "^3.0.1",
+    "vue-simplemde": "^0.4.6",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
