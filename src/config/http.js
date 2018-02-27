@@ -26,7 +26,7 @@ function checkStatus(response) {
     // 异常状态下，把错误信息返回去
     return {
         status: -404,
-        msg: '网络异常'
+        msg: response
     }
 }
 
@@ -35,9 +35,6 @@ function checkCode(res) {
     if (res.status === -404) {
         // alert(res.statusText)
     }
-    // if (res.data) {
-    //   alert(res.data.error_msg)
-    // }
     // console.log('返回信息：' + JSON.stringify(res.data));
     return res.data
 }
@@ -64,6 +61,8 @@ export default {
         )
     },
     put(url, data) {
+        delete data.updated_at;
+        delete data.created_at;
         return axios({
             method: 'put',
             url,
@@ -79,6 +78,7 @@ export default {
             }
         ).then(
             (res) => {
+                console.log(JSON.stringify(res))
                 return checkCode(res)
             }
         )

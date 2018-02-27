@@ -58,248 +58,242 @@
 </template>
 
 <script>
-import headTop from '@/components/headTop'
-import { getCategory, getArticleByid, updateArticle } from '@/api/getData'
-import { quillEditor } from 'vue-quill-editor'
+import headTop from "@/components/headTop";
+import { getCategory, getArticleByid, updateArticle } from "@/api/getData";
+import { quillEditor } from "vue-quill-editor";
 export default {
-	data() {
-		return { 
-			categoryList: [],
-			articleForm: '',
-			switchValue:false,
-			fullscreenLoading: true,
-			arules: {
-				title: [
-					{ required: true, message: '请输入标题', trigger: 'blur' },
-				],
-				content: [
-					{ required: true, message: '请输入内容', trigger: 'blur' },
-				]
-			},
-			editorOption: {
+  data() {
+    return {
+      categoryList: [],
+      articleForm: "",
+      switchValue: false,
+      fullscreenLoading: true,
+      arules: {
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        content: [{ required: true, message: "请输入内容", trigger: "blur" }]
+      },
+      editorOption: {}
+    };
+  },
+  components: {
+    headTop,
+    quillEditor
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill;
+    }
+  },
+  // beforeRouteEnter(to, from, next) {
+  // 	next(vm => {
+  // 		console.log('beforeRouteEnter===')
+  // 		vm.initData(vm.$route.query.aid);
+  // 	})
+  // },
+  created() {
+    // 组件创建完后获取数据，
+    // 此时 data 已经被 observed 了
+    console.log("created+initData()");
+    this.fullscreenLoading = true;
+    this.initData(this.$route.query.aid);
+  },
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    $route(next) {
+      console.log("watch()+initData()");
+      this.fullscreenLoading = true;
+      this.initData(this.$route.query.aid);
+    }
+  },
+  methods: {
+    async initData(aid) {
+      try {
+        const result = await getCategory();
+        if (result.length > 0) {
+          this.categoryList = result;
+        } else {
+          console.log(result);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      this.initDetail(aid);
+    },
+    async initDetail(aid) {
+      try {
+        const result = await getArticleByid(aid);
+        if (result.length > 0) {
+          this.articleForm = result[0];
+          this.fullscreenLoading = false;
+          // console.log(JSON.stringify(this.articleForm))
+        } else {
+          this.fullscreenLoading = false;
+          console.log("initDetail null=" + result);
+        }
+      } catch (err) {
+        this.fullscreenLoading = false;
+        console.log(err);
+      }
+    },
+    beforeImgUpload(file) {
+      const isRightType =
+        file.type === "image/jpeg" || file.type === "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
-			}
-
-		}
-	},
-	components: {
-		headTop,
-		quillEditor,
-	},
-	computed: {
-		editor() {
-			return this.$refs.myQuillEditor.quill
-		}
-	},
-	// beforeRouteEnter(to, from, next) {
-	// 	next(vm => {
-	// 		console.log('beforeRouteEnter===')
-	// 		vm.initData(vm.$route.query.aid);
-	// 	})
-	// },
-	created() {
-		// 组件创建完后获取数据，
-		// 此时 data 已经被 observed 了
-		console.log('created+initData()')
-		this.fullscreenLoading = true;
-		this.initData(this.$route.query.aid)
-	},
-	watch: {
-		// 如果路由有变化，会再次执行该方法
-		$route(next) {
-			console.log('watch()+initData()')
-			this.fullscreenLoading = true;
-			this.initData(this.$route.query.aid)
-		}
-	},
-	methods: {
-		async initData(aid) {
-			try {
-				const result = await getCategory();
-				if (result.length > 0) {
-					this.categoryList = result;
-				} else {
-					console.log(result)
-				}
-			} catch (err) {
-				console.log(err)
-			}
-			this.initDetail(aid);
-		}, async initDetail(aid) {
-			try {
-				const result = await getArticleByid(aid);
-				if (result.length > 0) {
-					this.articleForm = result[0];
-					this.fullscreenLoading = false;
-					// console.log(JSON.stringify(this.articleForm))
-				} else {
-					this.fullscreenLoading = false;
-					console.log('initDetail null=' + result)
-				}
-			} catch (err) {
-				this.fullscreenLoading = false;
-				console.log(err)
-			}
-
-		},
-		beforeImgUpload(file) {
-			const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-			const isLt2M = file.size / 1024 / 1024 < 2;
-
-			if (!isRightType) {
-				this.$message.error('上传头像图片只能是 JPG 格式!');
-			}
-			if (!isLt2M) {
-				this.$message.error('上传头像图片大小不能超过 2MB!');
-			}
-			return isRightType && isLt2M;
-		},
-		onEditorReady(editor) {
-			// console.log('editor ready!', editor)
-		},
-		updateArticle(articleForm) {
-			this.$refs[articleForm].validate(async (valid) => {
-				if (valid) {
-					//设置置顶
-					const params = {
-						...this.articleForm,
-					}
-					// console.log(JSON.stringify(params))
-					try {
-						const result = await updateArticle(this.aid, params);
-						console.log(result)
-						if (result) {
-							this.$message({
-								type: 'success',
-								message: '更新成功'
-							});
-						} else {
-							this.$message({
-								type: 'error',
-								message: result.message
-							});
-						}
-					} catch (err) {
-						console.log(err)
-					}
-				} else {
-					this.$notify.error({
-						title: '错误',
-						message: '请检查输入是否正确',
-						offset: 100
-					});
-					return false;
-				}
-			});
-		}
-	}
-}
+      if (!isRightType) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isRightType && isLt2M;
+    },
+    onEditorReady(editor) {
+      // console.log('editor ready!', editor)
+    },
+    updateArticle(articleForm) {
+      this.$refs[articleForm].validate(async valid => {
+        if (valid) {
+          //设置置顶
+          const params = {
+            ...this.articleForm
+          };
+          try {
+            const result = await updateArticle(params.id, params);
+            console.log(result);
+            if (result) {
+              this.$message({
+                type: "success",
+                message: "更新成功"
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: result
+              });
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        } else {
+          this.$notify.error({
+            title: "错误",
+            message: "请检查输入是否正确",
+            offset: 100
+          });
+          return false;
+        }
+      });
+    }
+  }
+};
 </script>
 
 <style lang="less">
-@import '../style/mixin';
+@import "../style/mixin";
 .form {
-	min-width: 400px;
-	margin-bottom: 30px;
-	&:hover {
-		box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5);
-		border-radius: 6px;
-		transition: all 400ms;
-	}
+  min-width: 400px;
+  margin-bottom: 30px;
+  &:hover {
+    box-shadow: 0 0 8px 0 rgba(232, 237, 250, 0.6),
+      0 2px 4px 0 rgba(232, 237, 250, 0.5);
+    border-radius: 6px;
+    transition: all 400ms;
+  }
 }
 
 .item20 {
-	width: 30%;
+  width: 30%;
 }
 
 .food_form {
-	border: 1px solid #eaeefb;
-	padding: 10px 10px 0;
+  border: 1px solid #eaeefb;
+  padding: 10px 10px 0;
 }
 
 .form_header {
-	text-align: center;
-	margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .category_select {
-	border: 1px solid #eaeefb;
-	padding: 10px 30px 10px 10px;
-	border-top-right-radius: 6px;
-	border-top-left-radius: 6px;
+  border: 1px solid #eaeefb;
+  padding: 10px 30px 10px 10px;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 .add_category_row {
-	height: 0;
-	overflow: hidden;
-	transition: all 400ms;
-	background: #f9fafc;
+  height: 0;
+  overflow: hidden;
+  transition: all 400ms;
+  background: #f9fafc;
 }
 
 .showEdit {
-	height: 185px;
+  height: 185px;
 }
 
 .add_category {
-	background: #f9fafc;
-	padding: 10px 30px 0px 10px;
-	border: 1px solid #eaeefb;
-	border-top: none;
+  background: #f9fafc;
+  padding: 10px 30px 0px 10px;
+  border: 1px solid #eaeefb;
+  border-top: none;
 }
 
 .add_category_button {
-	text-align: center;
-	line-height: 40px;
-	border-bottom-right-radius: 6px;
-	border-bottom-left-radius: 6px;
-	border: 1px solid #eaeefb;
-	border-top: none;
-	transition: all 400ms;
-	&:hover {
-		background: #f9fafc;
-		span,
-		.edit_icon {
-			color: #20a0ff;
-		}
-	}
-	span {
-		.sc(14px, #999);
-		transition: all 400ms;
-	}
-	.edit_icon {
-		color: #ccc;
-		transition: all 400ms;
-	}
+  text-align: center;
+  line-height: 40px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border: 1px solid #eaeefb;
+  border-top: none;
+  transition: all 400ms;
+  &:hover {
+    background: #f9fafc;
+    span,
+    .edit_icon {
+      color: #20a0ff;
+    }
+  }
+  span {
+    .sc(14px, #999);
+    transition: all 400ms;
+  }
+  .edit_icon {
+    color: #ccc;
+    transition: all 400ms;
+  }
 }
 
 .avatar-uploader .el-upload {
-	border: 1px dashed #d9d9d9;
-	border-radius: 6px;
-	cursor: pointer;
-	position: relative;
-	overflow: hidden;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .avatar-uploader .el-upload:hover {
-	border-color: #20a0ff;
+  border-color: #20a0ff;
 }
 
 .avatar-uploader-icon {
-	font-size: 28px;
-	color: #8c939d;
-	width: 120px;
-	height: 120px;
-	line-height: 120px;
-	text-align: center;
+  font-size: 28px;
+  color: #8c939d;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
 }
 
 .avatar {
-	width: 120px;
-	height: 120px;
-	display: block;
+  width: 120px;
+  height: 120px;
+  display: block;
 }
 
 .cell {
-	text-align: center;
+  text-align: center;
 }
 </style>
