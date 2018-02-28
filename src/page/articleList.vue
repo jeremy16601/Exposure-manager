@@ -3,7 +3,7 @@
         <head-top></head-top>
         <div class="table_container">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane v-for="c in categoryList" :label="c.name" :name="c.id+''"> </el-tab-pane>
+                <el-tab-pane v-for="c in categoryList" :key="c.id" :label="c.name" :name="c.id+' '"> </el-tab-pane>
             </el-tabs>
 
             <el-table :data="tableData" highlight-current-row style="width: 100%" v-loading.body="loading">
@@ -18,12 +18,12 @@
                 <el-table-column label="赞" prop="zan">
                 </el-table-column>
                 <el-table-column label="发布日期">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="mini" v-if='scope.row.status==1' type="warning" @click="handleClose(scope.$index, scope.row)">隐藏</el-button>
                         <el-button size="mini" v-else type="info" @click="handleClose(scope.$index, scope.row)">显示</el-button>
                         <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>

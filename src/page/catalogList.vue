@@ -26,7 +26,7 @@
         <el-table-column label="挂单时间" prop="time">
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button size="mini" v-if='scope.row.status==1' type="warning" @click="handleClose(scope.$index, scope.row)">隐藏</el-button>
             <el-button size="mini" v-else type="info" @click="handleClose(scope.$index, scope.row)">显示</el-button>
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>

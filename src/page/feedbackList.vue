@@ -7,8 +7,12 @@
                 </el-table-column>
                 <el-table-column label="内容" prop="content">
                 </el-table-column>
+                 <el-table-column label="是否回复" prop="is_look">
+                </el-table-column>
+                  <el-table-column label="回复内容" prop="admin_send">
+                </el-table-column>
                 <el-table-column label="发布时间">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{ scope.row.created_at | moment("YYYY-MM-DD HH:mm") }}
                     </template>
                 </el-table-column>
@@ -50,7 +54,7 @@ export default {
             try {
                 const data = await getFeedback(this.offset, this.limit);
                 if (data) {
-                    this.tableData = data;
+                    this.tableData = data.data.rows;
                     this.count = data.length;
                 } else {
                     throw new Error('获取数据失败');
