@@ -110,6 +110,8 @@ export const getAritleCount = () => http.get(host + '/article?type=count');
 export const getFeedback = (offset, limit) => http.get(host + '/feedback?offset=' + offset + '&limit=' + limit);
 //删除反馈
 export const delFeedback = fid => http.delete(host + '/feedback/' + fid);
+//提交反馈回复
+export const sendFeedback=(fid,data)=> http.put(host+'/feedback/'+fid,data);
 
 export const btc_getbalance = () => http.get('http://localhost:7002/balance');
 export const btc_getOrderList = (coinname) => http.post('http://localhost:7002/getOrderList', coinname);
